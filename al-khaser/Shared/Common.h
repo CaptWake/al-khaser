@@ -12,6 +12,7 @@ VOID resize_console_window();
 VOID print_results(int result, TCHAR* szMsg);
 VOID _print_check_text(const TCHAR* szMsg);
 VOID _print_check_result(int result, const TCHAR* szMsg);
+VOID print_detection_stats();
 
 VOID exec_check(int(*callback)(), const TCHAR* szMsg);
 

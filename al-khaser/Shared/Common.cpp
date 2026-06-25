@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "Common.h"
 
+/* Detection statistics counters */
+static unsigned int g_total = 0;
+static unsigned int g_detected = 0;
+
 VOID print_detected()
 {
 	/* Get handle to standard output */
@@ -63,16 +67,45 @@ VOID _print_check_text(const TCHAR* szMsg)
 
 VOID _print_check_result(int result, const TCHAR* szMsg)
 {
-	if (result == TRUE)
+	g_total++;
+	if (result == TRUE) {
+		g_detected++;
 		print_detected();
-	else
+	}
+	else {
 		print_not_detected();
+	}
 
 	/* log to file*/
 	TCHAR buffer[256] = _T("");
 	_stprintf_s(buffer, sizeof(buffer) / sizeof(TCHAR), _T("[*] %s -> %d"), szMsg, result);
 	LOG_PRINT(buffer);
 }
+
+VOID print_detection_stats()
+{
+	unsigned int total = g_total;
+	unsigned int detected = g_detected;
+	double percentage = (total > 0) ? (detected * 100.0 / total) : 0.0;
+
+	/* Get handle to standard output */
+	HANDLE nStdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO ConsoleScreenBufferInfo;
+	SecureZeroMemory(&ConsoleScreenBufferInfo, sizeof(CONSOLE_SCREEN_BUFFER_INFO));
+
+	/* Save the original console color */
+	GetConsoleScreenBufferInfo(nStdHandle, &ConsoleScreenBufferInfo);
+	WORD OriginalColors = *(&ConsoleScreenBufferInfo.wAttributes);
+
+	print_category(TEXT("Detection Statistics"));
+
+	SetConsoleTextAttribute(nStdHandle, 14);
+	_tprintf(TEXT("[*] Detected %u out of %u techniques (%.2f%%)\n"), detected, total, percentage);
+	SetConsoleTextAttribute(nStdHandle, OriginalColors);
+
+	LOG_PRINT(_T("[*] Detection statistics: %d / %d techniques detected"), (int)detected, (int)total);
+}
+
 
 VOID print_results(int result, TCHAR* szMsg)
 {

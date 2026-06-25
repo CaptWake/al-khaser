@@ -391,10 +391,10 @@ int main(int argc, char* argv[]){
 	/* Timing Attacks */
 	if (ENABLE_TIMING_ATTACKS) {
 		print_category(TEXT("Timing-attacks"));
-
+	
 		UINT delayInMillis = delayInSeconds * 1000U;
 		printf("\n[*] Delay value is set to %u seconds (%u minutes) ...\n", delayInSeconds, delayInSeconds / 60);
-
+	
 		exec_check(timing_NtDelayexecution, delayInMillis, TEXT("Performing a sleep using NtDelayExecution ..."));
 		exec_check(timing_sleep_loop, delayInMillis, TEXT("Performing a sleep() in a loop ..."));
 		exec_check(timing_SetTimer, delayInMillis, TEXT("Delaying execution using SetTimer ..."));
@@ -404,7 +404,7 @@ int main(int argc, char* argv[]){
 		exec_check(timing_IcmpSendEcho, delayInMillis, TEXT("Delaying execution using IcmpSendEcho ..."));
 		exec_check(timing_CreateWaitableTimer, delayInMillis, TEXT("Delaying execution using CreateWaitableTimer ..."));
 		exec_check(timing_CreateTimerQueueTimer, delayInMillis, TEXT("Delaying execution using CreateTimerQueueTimer ..."));
-
+	
 		exec_check(&rdtsc_diff_locky, TEXT("Checking RDTSC Locky trick "));
 		exec_check(&rdtsc_diff_vmexit, TEXT("Checking RDTSC which force a VM Exit (cpuid) "));
 	}
@@ -439,6 +439,8 @@ int main(int argc, char* argv[]){
 		ErasePEHeaderFromMemory();
 		SizeOfImage();
 	}
+
+	print_detection_stats();
 
 	_tprintf(_T("\n\nAnalysis done, I hope you didn't get red flags :)"));
 
