@@ -1,0 +1,31 @@
+image: Visual Studio 2022
+
+platform:
+  - x64
+  - Win32
+
+branches:
+  only:
+    - detection-stats
+
+configuration:
+  - Release
+
+environment:
+  projName: $(APPVEYOR_PROJECT_SLUG)
+  artifactName: $(APPVEYOR_PROJECT_NAME)-$(APPVEYOR_REPO_COMMIT)-$(PLATFORM)
+  SOLUTION_FILE_PATH: al-khaser.sln
+
+before_build:
+  - nuget restore %SOLUTION_FILE_PATH%
+
+build_script:
+  - msbuild /m /p:Configuration=%CONFIGURATION% /p:Platform=%PLATFORM% %SOLUTION_FILE_PATH%
+
+after_build:
+  - mkdir C:\projects\%projName%\install_bin\%artifactName%
+  - if "%PLATFORM%"=="x64" ( copy x64\Release\al-khaser.exe C:\projects\%projName%\install_bin\%artifactName%\al-khaser_x64.exe )
+  - if "%PLATFORM%"=="Win32" ( copy Release\al-khaser.exe C:\projects\%projName%\install_bin\%artifactName%\al-khaser_x86.exe )
+
+artifacts:
+  - path: install_bin\%artifactName%
