@@ -25,7 +25,7 @@ build_script:
 after_build:
   - mkdir C:\projects\%projName%\install_bin\%artifactName%
   - if "%PLATFORM%"=="x64" ( copy x64\Release\al-khaser.exe C:\projects\%projName%\install_bin\%artifactName%\al-khaser_x64.exe )
-  - if "%PLATFORM%"=="Win32" ( copy Release\al-khaser.exe C:\projects\%projName%\install_bin\%artifactName%\al-khaser_x86.exe )
+  - if "%PLATFORM%"=="x86" ( copy Release\al-khaser.exe C:\projects\%projName%\install_bin\%artifactName%\al-khaser_x86.exe )
 
 artifacts:
   - path: install_bin\%artifactName%
